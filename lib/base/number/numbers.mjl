@@ -1,0 +1,7 @@
+abstract type Number end
+abstract type Real <: Number end
+abstract type Integer <: Real end
+abstract type NaturalNumber <: Integer end
+include("naturalnumber.mjl")
+include("integer.mjl")
+include("rational.mjl")

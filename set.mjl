@@ -1,0 +1,9 @@
+# builtin: struct Set end
+@proof_forall (a::Set, b::Set) begin
+	@alpha (a, b) foralliff(x -> x∈union(a, b), x -> x∈a || x∈b)
+	@alpha (x∈a, x∈b) forallif(x -> x∈a, x -> x∈a || x∈b)
+	@alpha (this[2], this[1]) forallif(x -> x∈a, x -> x∈union(a, b))
+	@alpha () foralliff((e, s) -> subsetof(e, s), (e, s) -> forallif(x -> x∈e, x -> x∈s))
+	@alpha (this[4], this[3]) subsetof(a, union(a, b))
+	@QED
+end

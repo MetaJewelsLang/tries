@@ -1,0 +1,49 @@
+@category NaturalNumber(ty::Type) begin
+    @rule exists(zero -> isa(zero, ty)) # 初始值规则
+    @rule forallof(ty, x -> isa(next(x), ty)) # 后继规则
+    @assign zero getexist(zero -> isa(zero, ty))
+    @rule forall(n -> ifthen(n!=zero(ty), exists(p -> next(p)==n))) # 前继规则
+    @rule forall((x, y) -> ifthen(x!=y, next(x)!=next(y))) # 唯一性规则
+    @rule (ofcat(自反性, ==, ty, ty) && ofcat(对称性, ==, ty, ty) && ofcat(传递性, ==, ty, ty)) # 相等规则
+    @rule forall(p -> ifthen(
+        p(zero) && forallof(ty, n -> ifthen()),
+        forallof(ty, n -> call(p, n))
+    )) # 归纳规则
+end
+
+const ℕ = CategorySet(NaturalNumber)
++(a::NaturalNumber, b::NaturalNumber) = iszero(b) ? a : next(a) + prev(b)
+-(a::NaturalNumber, b::NaturalNumber) = iszero(b) ? a : iszero(a) ? ArgumentError("$a < $b") : prev(a) - prev(b)
+<(a::NatutalNumber, b::NaturalNumber) = iszero(a) ? !iszero(b) : prev(a) < prev(b)
+
+struct SetNaturalNumber
+    set::Set
+    function SetNaturalNumber(set::Set)
+        if set in axiom_N
+            return new(set)
+        else
+            throw(ArgumentError("set should be in $axiom_N"))
+        end
+    end
+end
+next(n::SetNaturalNumber) = new(union(n.set, enum(n.set)))
+
+function prev(n::SetNaturalNumber)
+    if n.set==∅
+        throw(ArgumentError("$n has no previous element"))
+    else
+        return new()
+    end
+end
+
+zero(::cat"SetNaturalNumber") = SetNaturalNumber(∅)
+one(::cat"SetNaturalNumber") = SetNaturalNumber(enum(∅))
+
+#= @proof begin
+    @β forall(x -> inℕ(x), inℕ(x)) inℕ
+    forall(_else -> ifthenelse(x -> inℕ(x), constructor(SetNaturalNumber(x)), _else))
+    @assert forall((x::Set) -> inℕ(x), x -> SetNaturalNumber(x) == ((@lower SetNaturalNumber)(x)))
+    field_set_of_lower = @β (x::Set) (ty::DataType, nt::NamedTuple, sy::Symbol) -> (getfield((@lower ty)(nt...), sy) == getfield(nt, sy)) (SetNaturalNumber, (set = x,), :set)
+    # fieldof_lower
+    @assert forallifthen(x -> isa(x, SetNaturalNumber), x -> isℕ(x.set))
+end =#

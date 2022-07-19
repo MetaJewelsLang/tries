@@ -1,0 +1,20 @@
+struct DiffInteger
+    base::NaturalNumber
+    cut::NaturalNumber
+end
+==(x::DiffInteger, y::DiffInteger) = (x.base+y.cut == x.cut+y.base)
+next(n::DiffInteger) = DiffInteger(next(n.base), n.cut)
+prev(n::DiffInteger) = DiffInteger(n.base, next(n.cut))
++(x::DiffInteger, y::DiffInteger) = DiffInteger(x.base+y.base, x.cut+y.cut)
+-(x::DiffInteger, y::DiffInteger) = DiffInteger(x.base+y.cut, x.cut+y.base)
+
+convert(::Type{DiffInteger}, n::NaturalNumber) = DiffInteger(n, zero(SetNaturalNumber))
+
+struct SignInteger
+    base::NaturalNumber
+    sign::Bool # true => positive, false => negative
+end
+zero(::Type{SignInteger}) = SignInteger(zero(SetNaturalNumber), true)
+iszero(n::SignInteger) = iszero(n.base)
+==(x::SignInteger, y::SignInteger) = (iszero(x) && iszero(y)) || x===y
+next(n::SignInteger) = n.sign ? SignInteger(next(n.base), n.sign)

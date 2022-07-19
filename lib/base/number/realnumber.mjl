@@ -1,0 +1,25 @@
+@category RealNumber(r::Range) begin
+	@rule ofcat(cat"WithUpperBound", r)
+	@rule ofcat(cat"OrderedField", r, +, *)
+	@rule (@forallin n ℚ n∈r)
+end
+
+struct DedekindCutRealNumber
+	lower::Set
+	higher::Set
+	function DedekindCutRealNumber(lower::Set, higher::Set)
+		if lower⊆ℚ && higher⊆ℚ && union(lower, higher)==ℚ && !isempty(lower) && !isempty(higher) && max(lower)<min(higher)
+			return new(lower, higher)
+		else
+			error("...")
+		end
+	end
+end
+
+@proof begin # Archimedes性质
+	# forall x y in r x>0 (exists n in n nx>y)
+end
+
+@proof begin # Q在R中稠密
+	;
+end

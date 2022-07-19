@@ -1,0 +1,53 @@
+struct Category{sym} end
+
+ofcat(::cat"Range", ::Set) = true
+ofcat(::cat"Range", ::Array) = true
+
+@category WithUpperBound(sub::Set, main::Set) begin
+	@rule sub⊆maint
+	@rule exists(a -> (a∈S && forallin(sub, x -> x≤a)))
+end
+
+@zh_show (::cat"WithUpperBound", sub::Set, main::Set) "$sub 在 $main 中有上界"
+
+function sup_bound(sub, main)
+	return min(x -> (x∈main && foreach((y -> y∈sub), y -> y<=x)))
+end
+
+# const =
+@alias sup_bound (上确界, 最小上界)
+
+# inf_bound
+
+最小上界性
+function ofcat(::LowestUpperBound, s::Set)
+	forall(e -> (ifthen(e⊆s && e!=∅, nothrow(sup_bound(e, s)))))
+end
+
+# 等价于最大下界性
+
+# 域
+@category Field(s::Range, +::Function, *::Function) begin
+	# @rule A1 (@forallif (a, b) (a∈s && b∈s) (x+y∈s)) # 加法封闭性
+	# @rule A2 (@forallin (a, b) s (a+b == b+a)) # 交换律
+	# @rule A3 (@forallin (a, b, c) s (a+(b+c) == (a+b)+c)) # 结合律
+	# @rule A4 (zero(s)∈s && (@forallin a s a+zero(s)==a)) # + 单位元
+	# @rule A5 (@forallin a s (@existsin b s a+b==zero(s))) # + 逆元
+	@rule A1 ofcat(cat"封闭性", s, +)
+	@rule A2 ofcat(cat"交换律", s, +)
+	@rule A3 ofcat(cat"结合律", s, +)
+	@rule A4 ofcat(cat"单位元", s, +, zero)
+	@rule A5 ofcat(cat"逆元", s, +, zero)
+	@rule M1 ofcat(cat"封闭性", s, *)
+	@rule M2 ofcat(cat"交换律", s, *)
+	@rule M3 ofcat(cat"结合律", s, *)
+	@rule M4 ofcat(cat"单位元", s, *, one)
+	@rule M5 ofcat(cat"去心逆元", s, *, zero)
+	@rule D ofcat(cat"分配律", s, +, *)
+end
+
+@category OrderedField(s::Range, +::Function, *::Function) begin
+	@rule F ofcat(cat"Field", s, +, *)
+	@rule O1 (@forallin (a, b, c) s, (b<c => a+b<a+c))
+	@rule O2 (@forallin (a, b) s (a>0 && b>0 => a*b>0))
+end
