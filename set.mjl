@@ -1,4 +1,14 @@
 # builtin: struct Set end
+@axiom empty_set() begin
+	exists(emp -> forall(x -> !(x∈emp)))
+end
+@axiom @forall pair_set(a, b) begin
+	exists(c -> forall(d -> (d∈c => or(d===a, d===b))))
+end
+@axiom @forall union_set(a, b) begin
+	exists(c -> forall(d -> (d∈c => or(d∈a, d∈b))))
+end
+
 @proof_forall (a::Set, b::Set) begin
 	@alpha (a, b) foralliff(x -> x∈union(a, b), x -> x∈a || x∈b)
 	@alpha (x∈a, x∈b) forallif(x -> x∈a, x -> x∈a || x∈b)
