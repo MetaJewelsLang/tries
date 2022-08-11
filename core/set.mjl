@@ -1,19 +1,53 @@
-# builtin: struct Set end
-@axiom empty_set() begin
-	exists(emp -> forall(x -> !(x∈emp)))
+"""
+markdown.zh = "集合，最重要的类型之一。使用 `Set(f)` 相当于 \$\{x | f(x)\}\$"
+"""
+@builtin struct Set end
+
+"""
+plain.zh = "集合相等，是对外延公理的调整"
+"""
+===(a::Set, b::Set) = forall(x -> (x∈a => x∈b))
+
+@builtin function ∈(_, ::Set) end
+@alias ∈ (in, isin, among, 属于)
+broadcast(f::Lambda, s::Set) = Set() do x
+	exists(y -> and(y∈s, f(y)===x))
 end
+"""
+markdown.zh = "`Set(p, ext)` 是内置功能的扩展，相当于 \$\{ext(x) | p(x)\}\$"
+"""
+Set(p::Lambda, ext::Set) = broadcast(ext, Set(p))
+enumerate(data) = Set(x -> x∈data)
+enum(args...) = enumerate(args)
+
+@axiom def_set() begin
+	forall() do f
+		assign(Set(f)) do set
+			@assert_exist set
+			forall(x -> iff(x∈set, f(x)))
+		end
+	end
+end
+
+"""
+plain.zh = "空集公理"
+"""
+@axiom empty_set() begin
+	existsval(Set(x -> false))
+end
+const ∅ = Set(x -> false)
+@alias ∅ (emptyset, 空集)
+
+"""
+plain.zh = "配对公理"
+"""
 @axiom @forall pair_set(a, b) begin
 	exists(c -> forall(d -> (d∈c => or(d===a, d===b))))
 end
+
+"""
+plain.zh = "并集公理"
+"""
 @axiom @forall union_set(a, b) begin
 	exists(c -> forall(d -> (d∈c => or(d∈a, d∈b))))
-end
-
-@proof_forall (a::Set, b::Set) begin
-	@alpha (a, b) foralliff(x -> x∈union(a, b), x -> x∈a || x∈b)
-	@alpha (x∈a, x∈b) forallif(x -> x∈a, x -> x∈a || x∈b)
-	@alpha (this[2], this[1]) forallif(x -> x∈a, x -> x∈union(a, b))
-	@alpha () foralliff((e, s) -> subsetof(e, s), (e, s) -> forallif(x -> x∈e, x -> x∈s))
-	@alpha (this[4], this[3]) subsetof(a, union(a, b))
-	@QED
 end
