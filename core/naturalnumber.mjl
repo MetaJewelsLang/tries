@@ -1,14 +1,37 @@
-@category NaturalNumber(ty::Type) begin
-    @rule isa(zero(ty), ty) # 初始值规则
-    @rule forall(x -> isa(x, ty) => isa(next(x), ty)) # 后继规则
-    @rule forall(n -> ifthen(n!=zero(ty), exists(p -> next(p)==n))) # 前继规则
-    @rule forall((x, y) -> ifthen(x!=y, next(x)!=next(y))) # 唯一性规则
+module PeanoRules
+"""
+plain.zh = "初始值规则"
+"""
+initial_value_rule(s, zero) = zero∈s
+
+"""
+plain.zh = "后继规则"
+"""
+next_rule(s, _) = forallin(s, e -> next(e)∈s)
+
+"""
+plain.zh = "前继规则"
+"""
+prev_rule(s, zero) = forallin(s, e -> e!=zero => existsin(s, p -> next(p)==e))
+
+"""
+plain.zh = "唯一性规则"
+"""
+uniqueness_rule(s, _) = forall((x, y) -> ifthen(x∈s && y∈s && x!=y, next(x)!=next(y)))
+
+end # PeanoRules
+
+struct NaturalNumber{T<:Type}
+    type::Type{T}
+    function NaturalNumber{T<:Type}()
+    end
+end
+
     @rule (ofcat(自反性, ==, ty, ty) && ofcat(对称性, ==, ty, ty) && ofcat(传递性, ==, ty, ty)) # 相等规则
     @rule forall(p -> ifthen(
         p(zero) && forallof(ty, n -> ifthen()),
         forallof(ty, n -> call(p, n))
     )) # 归纳规则
-end
 
 const ℕ = CategorySet(NaturalNumber)
 +(a::NaturalNumber, b::NaturalNumber) = iszero(b) ? a : next(a) + prev(b)

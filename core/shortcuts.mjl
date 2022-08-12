@@ -1,0 +1,11 @@
+"""
+markdown.zh = \"\"\"
+这个函数被设计用于方便地进行「伪赋值」操作。考虑以下用法：
+```mjl
+assign(max(v)) do m
+	m+m*m
+end
+```
+\"\"\"
+"""
+assign(f::Function, x) = f(x)

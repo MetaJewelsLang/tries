@@ -1,3 +1,6 @@
+@builtin struct Bool end
+@alias Bool (Boolean, 布尔)
+
 @builtin function not(::Bool) end
 @builtin function and(::Bool, ::Bool) end
 @builtin function or(::Bool, ::Bool) end
@@ -6,6 +9,9 @@
 @alias and (∧, &&, 与, 析取)
 @alias or (∨, ||, 或, 合取)
 @alias ifthen (⇒, =>, 蕴含)
+
+# @builtin :true
+# const false = not(true)
 
 iff(a::Bool, b::Bool) = and(a => b, b => a)
 @alias iff (ifandonlyif, 当且仅当)

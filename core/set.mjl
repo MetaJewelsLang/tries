@@ -1,5 +1,5 @@
 """
-markdown.zh = "集合，最重要的类型之一。使用 `Set(f)` 相当于 \$\{x | f(x)\}\$"
+markdown.zh = "集合，最*有用*的类型之一。使用 `Set(f)` 相当于 \$\{x | f(x)\}\$"
 """
 @builtin struct Set end
 
