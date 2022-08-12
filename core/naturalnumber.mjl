@@ -19,47 +19,59 @@ plain.zh = "唯一性规则"
 """
 uniqueness_rule(s, _) = forall((x, y) -> ifthen(x∈s && y∈s && x!=y, next(x)!=next(y)))
 
+"""
+plain.zh = "相等规则：具有自反性，对称性与传递性"
+"""
+equal_rule(s, _) = has_reflexity(==, s) && has_symmetry(==, s) && has_transitivity(==, s)
+
+"""
+plain.zh = "归纳规则"
+"""
+induction_rule(s, zero) = forallif(
+    p -> p(zero) && forallin(s, e -> p(e) => p(next(e))),
+    forallin(s, e -> p(e))
+)
+
 end # PeanoRules
 
-struct NaturalNumber{T<:Type}
-    type::Type{T}
-    function NaturalNumber{T<:Type}()
+function peano_check(s, zero)
+    initial_value_rule(s, zero) &&
+end
+
+struct NaturalNumber
+    field
+    function NaturalNumber(field)
+        return peano_check(field, zero) ? new(field) : void
     end
 end
 
-    @rule (ofcat(自反性, ==, ty, ty) && ofcat(对称性, ==, ty, ty) && ofcat(传递性, ==, ty, ty)) # 相等规则
-    @rule forall(p -> ifthen(
-        p(zero) && forallof(ty, n -> ifthen()),
-        forallof(ty, n -> call(p, n))
-    )) # 归纳规则
-
-const ℕ = CategorySet(NaturalNumber)
+# const ℕ = BroadSet(NaturalNumber)
 +(a::NaturalNumber, b::NaturalNumber) = iszero(b) ? a : next(a) + prev(b)
--(a::NaturalNumber, b::NaturalNumber) = iszero(b) ? a : iszero(a) ? ArgumentError("$a < $b") : prev(a) - prev(b)
+-(a::NaturalNumber, b::NaturalNumber) = iszero(b) ? a : iszero(a) ? void : prev(a) - prev(b)
 <(a::NatutalNumber, b::NaturalNumber) = iszero(a) ? !iszero(b) : prev(a) < prev(b)
 
+const naturalnumber_set = get() do s
+    isa(s, Set) &&
+    foralliff(e -> e∈s,
+        e -> e===∅ ||
+        existsin(s, p -> p∪enum(p)===e)
+    )
+end
 struct SetNaturalNumber
     set::Set
     function SetNaturalNumber(set::Set)
-        if set in axiom_N
-            return new(set)
-        else
-            throw(ArgumentError("set should be in $axiom_N"))
-        end
+        return set∈naturalnumber_set ? new(set) : void
     end
 end
 next(n::SetNaturalNumber) = SetNaturalNumber(union(n.set, enum(n.set)))
-
-function prev(n::SetNaturalNumber)
-    if n.set==∅
-        throw(ArgumentError("$n has no previous element"))
-    else
-        return SetNaturalNumber(getexist(p -> union(p, enum(p))==n.set))
-    end
+prev(n::SetNaturalNumber) = n.set===∅ ? void : get() do s
+    isa(s, Set) &&
+    union(p, enum(p))===n.set
 end
 
 zero(::Type{SetNaturalNumber}) = SetNaturalNumber(∅)
 one(::Type{SetNaturalNumber}) = SetNaturalNumber(enum(∅))
+two(::Type{SetNaturalNumber}) = SetNaturalNumber(enum(∅, enum(∅)))
 
 let
     SNN = SetNaturalNumber

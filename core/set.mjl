@@ -1,7 +1,12 @@
 """
-markdown.zh = "集合，最*有用*的类型之一。使用 `Set(f)` 相当于 \$\{x | f(x)\}\$"
+markdown.zh = "集合，最*有用*的类型之一。"
 """
 @builtin struct Set end
+
+"""
+markdown.zh = "使用 `set(f)` 相当于 \$\{x | f(x)\}\$"
+"""
+set(judge::Lambda) = get(s -> isa(s, Set) && foralliff(e -> e∈s, e -> judge(e)))
 
 """
 plain.zh = "集合相等，是对外延公理的调整"
@@ -10,32 +15,23 @@ plain.zh = "集合相等，是对外延公理的调整"
 
 @builtin function ∈(_, ::Set) end
 @alias ∈ (in, isin, among, 属于)
-broadcast(f::Lambda, s::Set) = Set() do x
+broadcast(f::Lambda, s::Set) = set() do x
 	exists(y -> and(y∈s, f(y)===x))
 end
 """
-markdown.zh = "`Set(p, ext)` 是内置功能的扩展，相当于 \$\{ext(x) | p(x)\}\$"
+markdown.zh = "`set(p, ext)` 是单参数功能的扩展，相当于 \$\{ext(x) | p(x)\}\$"
 """
-Set(p::Lambda, ext::Set) = broadcast(ext, Set(p))
-enumerate(data) = Set(x -> x∈data)
+set(p::Lambda, ext::Set) = broadcast(ext, set(p))
+enumerate(data) = set(x -> x∈data)
 enum(args...) = enumerate(args)
-
-@axiom def_set() begin
-	forall() do f
-		assign(Set(f)) do set
-			@assert_exist set
-			forall(x -> iff(x∈set, f(x)))
-		end
-	end
-end
 
 """
 plain.zh = "空集公理"
 """
 @axiom empty_set() begin
-	existsval(Set(x -> false))
+	existsval(set(x -> false))
 end
-const ∅ = Set(x -> false)
+const ∅ = set(x -> false)
 @alias ∅ (emptyset, 空集)
 
 """
@@ -51,3 +47,8 @@ plain.zh = "并集公理"
 @axiom @forall union_set(a, b) begin
 	exists(c -> forall(d -> (d∈c => or(d∈a, d∈b))))
 end
+
+struct BroadSet
+	field
+end
+in(e, s::BroadSet) = in(e, s.field)
