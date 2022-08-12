@@ -1,0 +1,5 @@
+macro alias(ori, exts...)
+	for ext in exts
+		eval(:(const $ext = $ori))
+	end
+end

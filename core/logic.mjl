@@ -1,3 +1,16 @@
-@axiom_mv @forall simplify_and(a::Bool, b::Bool) begin
-	a
-end
+@builtin function not(::Bool) end
+@builtin function and(::Bool, ::Bool) end
+@builtin function or(::Bool, ::Bool) end
+@builtin function ifthen(::Bool, ::Bool) end
+@alias not (¬, 否定)
+@alias and (∧, &&, 与, 析取)
+@alias or (∨, ||, 或, 合取)
+@alias ifthen (⇒, =>, 蕴含)
+
+iff(a::Bool, b::Bool) = and(a => b, b => a)
+@alias iff (ifandonlyif, 当且仅当)
+
+"""
+plain.zh = "与化简"
+"""
+@axiom simplify_and() = ifthen(and(a, b), a)
