@@ -1,0 +1,18 @@
+module CommonAbstraction
+has_closure_2(s, f) = forallin(s, x -> forallin(s, y -> f(x, y)∈s))
+has_reflexity(s, f) = forallin(s, x -> f(x, x))
+has_symmetry(s, f) = forallin(s, x -> forallin(s, y -> f(x, y)==f(y, x)))
+has_transitivity(s, f) = forallin(s,
+	x -> forallin(s,
+		y -> forallin(s,
+			z -> f(x, y) && f(y, z) => f(x, z)
+		)
+	)
+)
+
+@proof set_eq_reflexity begin
+end
+
+is_magma(s, f) = has_closure_2(s, f)
+
+end # CA

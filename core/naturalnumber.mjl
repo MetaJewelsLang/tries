@@ -22,7 +22,7 @@ uniqueness_rule(s, _) = forall((x, y) -> ifthen(x∈s && y∈s && x!=y, next(x)!
 """
 plain.zh = "相等规则：具有自反性，对称性与传递性"
 """
-equal_rule(s, _) = has_reflexity(==, s) && has_symmetry(==, s) && has_transitivity(==, s)
+equal_rule(s, _) = has_reflexity(s, ==) && has_symmetry(s, ==) && has_transitivity(s, ==)
 
 """
 plain.zh = "归纳规则"
