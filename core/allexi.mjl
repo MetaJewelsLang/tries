@@ -1,5 +1,9 @@
 @builtin function forall(::Lambda) end
 forallif(st::Lambda, then::Lambda) = forall(e -> st(e) => then(e))
+@alias forallif (foreach,)
+foralliff(a::Lambda, b::Lambda) = forall(e -> iff(a(e), b(e)))
 forallin(s, f::Lambda) = forallif(e -> e∈s, f)
 
-const foreach = forallif
+macro forall(args, expr)
+    return :($args -> $expr)
+end

@@ -32,16 +32,21 @@ induction_rule(s, zero) = forallif(
     forallin(s, e -> p(e))
 )
 
-end # PeanoRules
-
 function peano_check(s, zero)
     initial_value_rule(s, zero) &&
+    next_rule(s, zero) &&
+    prev_rule(s, zero) &&
+    uniqueness_rule(s, zero) &&
+    equal_rule(s, zero) &&
+    induction_rule(s, zero)
 end
+
+end # PeanoRules
 
 struct NaturalNumber
     field
     function NaturalNumber(field)
-        return peano_check(field, zero) ? new(field) : void
+        return PeanoRules.peano_check(field, zero) ? new(field) : void
     end
 end
 
@@ -69,21 +74,18 @@ prev(n::SetNaturalNumber) = n.set===∅ ? void : get() do s
     union(p, enum(p))===n.set
 end
 
-zero(::Type{SetNaturalNumber}) = SetNaturalNumber(∅)
-one(::Type{SetNaturalNumber}) = SetNaturalNumber(enum(∅))
-two(::Type{SetNaturalNumber}) = SetNaturalNumber(enum(∅, enum(∅)))
+@inline zero(::Type{SetNaturalNumber}) = SetNaturalNumber(∅)
 
 let
-    SNN = SetNaturalNumber
-    R1 = @proof begin
-        @ax_constructor isa(SNN(∅), SNN)
-        @beta isa(zero(SNN), SNN) isa($, SNN)
-        @ax_exists exists(zero -> isa(zero, SNN))
-    end
-    R2 = @proof begin
+    @inline SNN = SetNaturalNumber
+    @inline ZERO = zero(SNN)
+    using PeanoRules
+    initial = @proof begin
+        tyas = @ax_constructor ZERO # isa(ZERO, SNN)
+        inas = @wrap in(_, ::Type) tyas # ZERO∈SNN
+        @wrap initial_rule(_, _) inas
     end
 end
-
 
 #= @proof begin
     @β forall(x -> inℕ(x), inℕ(x)) inℕ
