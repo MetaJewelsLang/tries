@@ -11,12 +11,12 @@ set(judge::Lambda) = get(s -> isa(s, Set) && foralliff(e -> e∈s, e -> judge(e)
 """
 plain.zh = "集合相等，是对外延公理的调整"
 """
-===(a::Set, b::Set) = forall(x -> (x∈a => x∈b))
+==(a::Set, b::Set) = forall(x -> (x∈a => x∈b))
 
 @builtin function ∈(_, ::Set) end
 @alias ∈ (in, isin, among, 属于)
 broadcast(f::Lambda, s::Set) = set() do x
-	exists(y -> and(y∈s, f(y)===x))
+	exists(y -> and(y∈s, f(y)==x))
 end
 """
 markdown.zh = "`set(p, ext)` 是单参数功能的扩展，相当于 \$\{ext(x) | p(x)\}\$"
@@ -38,7 +38,7 @@ const ∅ = set(x -> false)
 plain.zh = "配对公理"
 """
 @axiom @forall pair_set(a, b) begin
-	exists(c -> forall(d -> (d∈c => or(d===a, d===b))))
+	exists(c -> forall(d -> (d∈c => or(d==a, d==b))))
 end
 
 """

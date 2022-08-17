@@ -58,8 +58,8 @@ end
 const naturalnumber_set = get() do s
     isa(s, Set) &&
     foralliff(e -> e∈s,
-        e -> e===∅ ||
-        existsin(s, p -> p∪enum(p)===e)
+        e -> e==∅ ||
+        existsin(s, p -> p∪enum(p)==e)
     )
 end
 struct SetNaturalNumber
@@ -69,9 +69,9 @@ struct SetNaturalNumber
     end
 end
 next(n::SetNaturalNumber) = SetNaturalNumber(union(n.set, enum(n.set)))
-prev(n::SetNaturalNumber) = n.set===∅ ? void : get() do s
+prev(n::SetNaturalNumber) = n.set==∅ ? void : get() do s
     isa(s, Set) &&
-    union(p, enum(p))===n.set
+    union(p, enum(p))==n.set
 end
 
 @inline zero(::Type{SetNaturalNumber}) = SetNaturalNumber(∅)
