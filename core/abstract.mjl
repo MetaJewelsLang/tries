@@ -50,12 +50,12 @@ plain.zh = "满足结合律而不满足交换律，一般被叫做“乘法”�
 is_non_abelian_group(s, f) = is_group(s, f) && !has_symmetry(s, f)
 @alias is_non_abelian_group (非阿贝尔群,)
 
-is_limited_group(s, f) = is_group(s, f) && is_limited(s)
+is_finite_group(s, f) = is_group(s, f) && is_finite(s)
 is_infinite_group(s, f) = is_group(s, f) && is_infinite(s)
-@alias is_limited_group (有限群,)
+@alias is_finite_group (有限群,)
 @alias is_infinite_group (无限群,)
 
-is_sub_group(s, f, t) = is_group(s, f) && is_group(t, f) && issubset(t, s)
+is_sub_group(s, f, t) = is_group(s, f) && is_group(t, f) && subset(t, s)
 
 @environment begin
     @global s,f is_group(s, f)

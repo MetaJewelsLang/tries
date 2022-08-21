@@ -1,14 +1,10 @@
-struct Category{sym} end
-
-ofcat(::cat"Range", ::Set) = true
-ofcat(::cat"Range", ::Array) = true
-
-@category WithUpperBound(sub::Set, main::Set) begin
-	@rule sub⊆maint
-	@rule exists(a -> (a∈S && forallin(sub, x -> x≤a)))
+"""
+term.zh = "\$sub 在 \$main 中有上界"
+"""
+has_upperbound_in(sub, main) = subset(sub, main) && exists() do a
+	a∈main && forallin(sub, x -> x≤a)
 end
 
-@zh_show (::cat"WithUpperBound", sub::Set, main::Set) "$sub 在 $main 中有上界"
 
 function sup_bound(sub, main)
 	return min(x -> (x∈main && foreach((y -> y∈sub), y -> y<=x)))

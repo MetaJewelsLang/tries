@@ -1,4 +1,9 @@
 """
+plain.zh = "判断 x 是否是 T 的实例"
+"""
+@inline isa(x, T) = typeof(x) == T
+
+"""
 markdown.zh = \"\"\"
 这个函数被设计用于方便地进行「伪赋值」操作。考虑以下用法：
 ```mjl
@@ -9,3 +14,5 @@ end
 \"\"\"
 """
 assign(f::Function, x) = f(x)
+
+@inline iszero(x) = x == zero(typeof(x))

@@ -1,13 +1,5 @@
-struct Array{T, N}
-	func::Function
+struct List
+	l_limit::NaturalNumber
+	r_limit::Union{NaturalNumber, Nothing}
+	set::Set
 end
-getindex(arr::Array, tup...) = arr.func(tup...)
-
-const List{T} where T = Array{T, 1}
-const Matrix{T} where T = Array{T, 2}
-
-struct OffsetList{T}
-	list::List{T}
-	offset::NaturalNumber
-end
-getindex(arr::OffsetList, i) = arr.list[i+arr.offset]

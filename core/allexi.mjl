@@ -5,5 +5,16 @@ foralliff(a::Lambda, b::Lambda) = forall(e -> iff(a(e), b(e)))
 forallin(s, f::Lambda) = forallif(e -> e∈s, f)
 
 macro forall(args, expr)
-    return :($args -> $expr)
+    re = expr
+    for i in reverse(args)
+        re = :(forall(i -> $re))
+    end
+    return re
 end
+
+@builtin function exists(::Lambda) end
+macro exists(args, expr)
+    return :($args -> expr)
+end
+
+@builtin function get(::Lambda) end
