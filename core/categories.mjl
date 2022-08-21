@@ -1,49 +1,33 @@
-"""
-term.zh = "\$sub 在 \$main 中有上界"
-"""
-has_upperbound_in(sub, main) = subset(sub, main) && exists() do a
-	a∈main && forallin(sub, x -> x≤a)
+has_upperbound(e, s) = subset(e, s) && exists() do a
+	a∈s && forallin(e, x -> x <= a)
 end
 
-
-function sup_bound(sub, main)
-	return min(x -> (x∈main && foreach((y -> y∈sub), y -> y<=x)))
-end
-
-# const =
+sup_bound(e, s) = min_in(s, x -> forallin(e, y -> y <= x))
 @alias sup_bound (上确界, 最小上界)
 
-# inf_bound
+inf_bound(e, s) = max_in(s, x -> forallin(e, y -> y >= x))
+@alias inf_bound (下确界, 最大下界)
 
-最小上界性
-function ofcat(::LowestUpperBound, s::Set)
-	forall(e -> (ifthen(e⊆s && e!=∅, nothrow(sup_bound(e, s)))))
-end
+has_lowest_supbound(s) = forallif(e -> e⊆s && e!=∅, e -> existsval(sup_bound(e, s)))
+@alias has_lowest_supbound (最小上界性,)
 
-# 等价于最大下界性
+is_field(s, +, *, zero, one) =
+	# ADD
+	has_closure_2(s, +) &&
+	has_symmetry(s, +) &&
+	has_associativity(s, +) &&
+	has_unit_left(s, +, zero) &&
+	has_inverse_left(s, +, zero) &&
+	# MUL
+	has_closure_2(s, *) &&
+	has_symmetry(s, *) &&
+	has_associativity(s, *) &&
+	has_unit_left(s, *, one) &&
+	has_noncenter_inverse_left(s, *, zero) &&
+	# D
+	has_distributivity(s, +, *)
 
-# 域
-@category Field(s::Range, +::Function, *::Function) begin
-	# @rule A1 (@forallif (a, b) (a∈s && b∈s) (x+y∈s)) # 加法封闭性
-	# @rule A2 (@forallin (a, b) s (a+b == b+a)) # 交换律
-	# @rule A3 (@forallin (a, b, c) s (a+(b+c) == (a+b)+c)) # 结合律
-	# @rule A4 (zero(s)∈s && (@forallin a s a+zero(s)==a)) # + 单位元
-	# @rule A5 (@forallin a s (@existsin b s a+b==zero(s))) # + 逆元
-	@rule A1 ofcat(cat"封闭性", s, +)
-	@rule A2 ofcat(cat"交换律", s, +)
-	@rule A3 ofcat(cat"结合律", s, +)
-	@rule A4 ofcat(cat"单位元", s, +, zero)
-	@rule A5 ofcat(cat"逆元", s, +, zero)
-	@rule M1 ofcat(cat"封闭性", s, *)
-	@rule M2 ofcat(cat"交换律", s, *)
-	@rule M3 ofcat(cat"结合律", s, *)
-	@rule M4 ofcat(cat"单位元", s, *, one)
-	@rule M5 ofcat(cat"去心逆元", s, *, zero)
-	@rule D ofcat(cat"分配律", s, +, *)
-end
-
-@category OrderedField(s::Range, +::Function, *::Function) begin
-	@rule F ofcat(cat"Field", s, +, *)
-	@rule O1 (@forallin (a, b, c) s, (b<c => a+b<a+c))
-	@rule O2 (@forallin (a, b) s (a>0 && b>0 => a*b>0))
-end
+is_ordered_field(s, +, *, zero, one) =
+	is_field(s, +, *, zero, one) &&
+	(@forall a,b,c∈s b<c => a+b<a+c) &&
+	(@forall a,b∈s a>0 && b>0 => a*b>0)
