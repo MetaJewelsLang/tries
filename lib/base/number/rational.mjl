@@ -1,1 +1,2 @@
-abstract type Rational <: Number end
+struct Rational
+end

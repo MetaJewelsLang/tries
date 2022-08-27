@@ -45,8 +45,9 @@ end # PeanoRules
 
 struct NaturalNumber
     field
-    function NaturalNumber(field)
-        return PeanoRules.peano_check(field, zero) ? new(field) : void
+    data
+    function NaturalNumber(field, data)
+        return PeanoRules.peano_check(field, zero) && data∈field ? new(field, data) : void
     end
 end
 

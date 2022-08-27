@@ -1,7 +1,11 @@
-@category RealNumber(r::Range) begin
-	@rule ofcat(cat"WithUpperBound", r)
-	@rule ofcat(cat"OrderedField", r, +, *)
-	@rule (@forallin n ℚ n∈r)
+struct RealNumber
+	field
+	data
+	RealNumber(field, data) =
+		has_lowest_supbound(field) &&
+		is_ordered_field(field, +, *, zero(field), one(field)) &&
+		wider_in(ℚ, field) &&
+		data in field ? new(field, data) : void
 end
 
 struct DedekindCutRealNumber

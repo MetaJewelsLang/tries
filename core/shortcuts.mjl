@@ -15,4 +15,11 @@ end
 """
 assign(f::Function, x) = f(x)
 
+"""
+markdown.zh = "使用形如 `@assign x=0 x^2`"
+"""
+macro assign(assi, expr)
+	return :(assign($(assi.args[1]) -> $expr, $(assi.args[2])))
+end
+
 @inline iszero(x) = x == zero(typeof(x))
