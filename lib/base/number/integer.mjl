@@ -16,5 +16,5 @@ struct SignInteger
 end
 zero(::Type{SignInteger}) = SignInteger(zero(SetNaturalNumber), true)
 iszero(n::SignInteger) = iszero(n.base)
-==(x::SignInteger, y::SignInteger) = (iszero(x) && iszero(y)) || x===y
+==(x::SignInteger, y::SignInteger) = (iszero(x) && iszero(y)) || (x.sign==y.sign && x.base==y.base)
 next(n::SignInteger) = n.sign ? SignInteger(next(n.base), n.sign)

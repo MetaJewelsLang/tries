@@ -1,0 +1,6 @@
+struct Pair
+	first
+	second
+end
+
+ids(s::Set) = broadcast(p -> p.first, s)

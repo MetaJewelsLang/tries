@@ -2,4 +2,6 @@ struct List
 	l_limit::NaturalNumber
 	r_limit::Union{NaturalNumber, Nothing}
 	set::Set
+	List(l, r, s) =
+		ids(s) == int_range(l, r) ? new(l, r, s) : void
 end

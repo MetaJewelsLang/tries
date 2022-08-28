@@ -22,4 +22,5 @@ macro assign(assi, expr)
 	return :(assign($(assi.args[1]) -> $expr, $(assi.args[2])))
 end
 
+@inline ==(a, b) = a===b
 @inline iszero(x) = x == zero(typeof(x))
