@@ -4,10 +4,19 @@ forallif(st::Lambda, then::Lambda) = forall(e -> st(e) => then(e))
 foralliff(a::Lambda, b::Lambda) = forall(e -> iff(a(e), b(e)))
 forallin(s, f::Lambda) = forallif(e -> e∈s, f)
 
-macro forall(args, expr)
+macro forall(pre, expr)
+    if isa(pre, Symbol)
+        return :(forall($pre -> $expr))
+    end
+    @assert isa(pre, Expr)
     re = expr
     for i in reverse(args)
-        re = :(forall(i -> $re))
+        if isa(i, Symbol)
+            re = :(forall(i -> $re))
+        else
+            @assert isa(i, Expr)
+            re = :(forall($(i.args[2]) -> $i => $re))
+        end
     end
     return re
 end

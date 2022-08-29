@@ -1,0 +1,2 @@
+@builtin function existsval(x) end
+keepsexistence(m::Method) = forallin(values(m), x -> existsval(x))

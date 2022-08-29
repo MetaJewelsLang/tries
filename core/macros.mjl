@@ -1,5 +1,9 @@
-macro alias(ori, exts...)
-	for ext in exts
-		eval(:(const $ext = $ori))
+macro alias(ori, exts)
+	if isa(exts, Tuple)
+		for ext in exts
+			eval(:(const $ext = $ori))
+		end
+	else
+		eval(:(const $exts = $ori))
 	end
 end
