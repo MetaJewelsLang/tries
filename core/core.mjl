@@ -1,0 +1,11 @@
+module Core
+export Bool
+export not, and, or, ifthen, iff
+include("logic.mjl")
+
+export forall, forallif, foralliff, forallin
+export exists
+export get
+include("allexi.mjl")
+
+end

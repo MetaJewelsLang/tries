@@ -2,8 +2,10 @@ macro alias(ori, exts)
 	if isa(exts, Tuple)
 		for ext in exts
 			eval(:(const $ext = $ori))
+			eval(:(export $ext))
 		end
 	else
 		eval(:(const $exts = $ori))
+		eval(:(export $exts))
 	end
 end

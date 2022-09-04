@@ -24,3 +24,8 @@ end
 
 @inline ==(a, b) = a===b
 @inline iszero(x) = x == zero(typeof(x))
+>(a, b) = <(b, a)
+≤(a, b) = a<b || a==b
+≥(a, b) = a>b || a==b
+@alias ≤ (leq, u2264)
+@alias ≥ (geq, u2265)

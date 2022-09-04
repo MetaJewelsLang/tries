@@ -45,11 +45,12 @@ plain.zh = "配对公理"
 end
 
 union(a::Set, b::Set) = set(x -> x∈a || x∈b)
+@alias union (∪, 并集)
 """
 plain.zh = "并集公理"
 """
 @axiom macro union_set()
-	keepsexistence(method"union[Set Set]")
+	keepsexistence(method(union, Set, Set))
 end
 
 """
