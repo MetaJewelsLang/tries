@@ -14,7 +14,7 @@ plain.zh = "集合相等，是对外延公理的调整"
 ===(a::Set, b::Set) = @forall x iff(x∈a, x∈b)
 
 @builtin function ∈(_, ::Set) end
-@alias ∈ (in, isin, among, 属于)
+@alias ∈ (in, isin, among, 属于, u2208)
 broadcast(f::Lambda, s::Set) = set(x -> (@exists y∈s f(y)==x))
 """
 markdown.zh = "`set(p, ext)` 是单参数功能的扩展，相当于 \$\{ext(x) | p(x)\}\$"
@@ -59,6 +59,22 @@ plain.zh = "无限公理"
 @axiom inf_set() begin
 	@exists N∈Set ∅∈N && (@forall x∈N union(x, enum(x))∈N)
 end
+
+∉(a, b) = !(a∈b)
+@alias ∉ (notin, u2209)
+∋(a, b) = b∈a
+@alias ∋ (ni, u220b)
+∌(a, b) = !(b∈a)
+@alias ∌ (notni, u220c)
+
+⊆(a, b) = @forall x∈a x∈b
+@alias ⊆ (subseteq, subset, u2286)
+⊂(a, b) = subset(a, b) && a!==b
+@alias ⊂ (proper_subset, u2282, ⊊, subsetneq, u228a)
+⊇(a, b) = subset(b, a)
+@alias ⊇ (supseteq, supset, u2287)
+⊃(a, b) = proper_subset(b, a)
+@alias ⊃ (proper_supset, u2283, ⊋, supsetneq, u228b)
 
 ==(a::Set, b::Set) = @forall x iff(x∈a, (@exists y∈b x==y))
 
