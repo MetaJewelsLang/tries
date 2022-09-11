@@ -1,3 +1,7 @@
+"""
+plain.en = "Core includes all the core functions, without which you can do almost nothing"
+plain.zh = "Core 中包含了所有的核心功能，离开它你（几乎）无法做任何事"
+"""
 module Core
 export Bool
 export not, and, or, ifthen, iff

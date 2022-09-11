@@ -1,12 +1,13 @@
 """
-markdown.zh = "集合，最*有用*的类型之一。"
+markdown.en = "set, one of the most *useful* types"
+markdown.zh = "集合，最*有用*的类型之一"
 """
 @builtin struct Set end
 
 """
 markdown.zh = "使用 `set(f)` 相当于 \$\{x | f(x)\}\$"
 """
-set(judge::Lambda) = get(s -> isa(s, Set) && foralliff(e -> e∈s, e -> judge(e)))
+set(judge::Lambda) = get(s -> foralliff(e -> e∈s, e -> judge(e)), Set)
 
 """
 plain.zh = "集合相等，是对外延公理的调整"
@@ -15,7 +16,9 @@ plain.zh = "集合相等，是对外延公理的调整"
 
 @builtin function ∈(_, ::Set) end
 @alias ∈ (in, isin, among, 属于, u2208)
-broadcast(f::Lambda, s::Set) = set(x -> (@exists y∈s f(y)==x))
+
+broadcast(f::Lambda, s::Set) = set(x -> (@exists y∈s f(y)===x))
+
 """
 markdown.zh = "`set(p, ext)` 是单参数功能的扩展，相当于 \$\{ext(x) | p(x)\}\$"
 """
@@ -29,6 +32,7 @@ plain.zh = "空集公理"
 @axiom macro empty_set()
 	existsval(set(x -> false))
 end
+
 const ∅ = set(x -> false)
 @alias ∅ (emptyset, 空集)
 

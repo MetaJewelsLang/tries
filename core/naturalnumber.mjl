@@ -1,3 +1,6 @@
+"""
+plain.zh = "用于检验自然数构造的皮亚诺规则簇"
+"""
 module PeanoRules
 """
 plain.zh = "初始值规则"
@@ -43,6 +46,9 @@ end
 
 end # PeanoRules
 
+"""
+plain.zh = "标准自然数 wrapper"
+"""
 struct NaturalNumber
     field
     data
@@ -56,8 +62,8 @@ end
 -(a::NaturalNumber, b::NaturalNumber) = iszero(b) ? a : iszero(a) ? void : prev(a) - prev(b)
 <(a::NatutalNumber, b::NaturalNumber) = iszero(a) ? !iszero(b) : prev(a) < prev(b)
 
-const naturalnumber_set = get() do s
-    isa(s, Set) &&
+# === SetNaturalNumber ===
+const naturalnumber_set = get(Set) do s
     foralliff(e -> e∈s,
         e -> e==∅ ||
         existsin(s, p -> p∪enum(p)==e)
@@ -70,10 +76,7 @@ struct SetNaturalNumber
     end
 end
 next(n::SetNaturalNumber) = SetNaturalNumber(union(n.set, enum(n.set)))
-prev(n::SetNaturalNumber) = n.set==∅ ? void : get() do s
-    isa(s, Set) &&
-    union(p, enum(p))==n.set
-end
+prev(n::SetNaturalNumber) = iszero(n) ? void : get(x -> next(x)===n, SetNaturalNumber)
 
 @inline zero(::Type{SetNaturalNumber}) = SetNaturalNumber(∅)
 

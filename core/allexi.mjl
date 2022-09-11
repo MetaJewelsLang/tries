@@ -26,4 +26,4 @@ macro exists(args, expr)
     return :($args -> expr)
 end
 
-@builtin function get(::Lambda) end
+@builtin function get(::Lambda, ::Type) end
