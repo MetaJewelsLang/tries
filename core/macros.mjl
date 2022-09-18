@@ -1,3 +1,5 @@
+@builtin macro lambda end
+@builtin macro method end
 macro alias(ori, exts)
 	if isa(exts, Tuple)
 		for ext in exts

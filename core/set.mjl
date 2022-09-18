@@ -11,6 +11,7 @@ set(judge::Lambda) = get(s -> foralliff(e -> e∈s, e -> judge(e)), Set)
 
 """
 plain.zh = "集合相等，是对外延公理的调整"
+plain.en = "definition of equality, adjustion to Axiom of Extensionality"
 """
 ===(a::Set, b::Set) = @forall x iff(x∈a, x∈b)
 
@@ -25,6 +26,8 @@ markdown.zh = "`set(p, ext)` 是单参数功能的扩展，相当于 \$\{ext(x) 
 set(p::Lambda, ext::Set) = broadcast(ext, set(p))
 enumerate(data) = set(x -> x∈data)
 enum(args...) = enumerate(args)
+
+# const universe = set(x -> true)
 
 """
 plain.zh = "空集公理"
@@ -48,8 +51,9 @@ plain.zh = "配对公理"
 	@exists c∈Set (@forall d iff(d∈c, d===a || d===b))
 end
 
-union(a::Set, b::Set) = set(x -> x∈a || x∈b)
+union(a, b) = set(x -> x∈a || x∈b)
 @alias union (∪, 并集)
+intersect(a, b) = ;
 """
 plain.zh = "并集公理"
 """
@@ -79,6 +83,10 @@ end
 @alias ⊇ (supseteq, supset, u2287)
 ⊃(a, b) = proper_subset(b, a)
 @alias ⊃ (proper_supset, u2283, ⊋, supsetneq, u228b)
+
+\(a::Set, b::Set) = Set(x -> in(x, a) && notin(x, b))
+△(a::Set, b::Set) = union(a\b, b\a)
+@alias △ symmetric_difference
 
 ==(a::Set, b::Set) = @forall x iff(x∈a, (@exists y∈b x==y))
 
