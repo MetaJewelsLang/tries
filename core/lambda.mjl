@@ -1,0 +1,8 @@
+domain(f::Lambda) = set(x -> f(x)!=void)
+range(f::Lambda) = broadcast(f, domain(f))
+@alias domain (dom, 定义域)
+@alias range (ran, 值域)
+
+macro with_domain(f, domain)
+	return $(args... -> in(args, domain) ? void : f(args...))
+end

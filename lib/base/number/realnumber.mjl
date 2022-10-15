@@ -27,3 +27,6 @@ end
 @proof begin # Q在R中稠密
 	;
 end
+
+-(a::RealNumber, b::RealNumber) = +(a, neg(b))
+/(a::RealNumber, b::RealNumber) = *(a, inv(b))
