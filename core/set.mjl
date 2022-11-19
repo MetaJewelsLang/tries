@@ -13,7 +13,7 @@ set(judge::Lambda) = get(s -> foralliff(e -> e∈s, e -> judge(e)), Set)
 plain.zh = "集合相等，是对外延公理的调整"
 plain.en = "definition of equality, adjustion to Axiom of Extensionality"
 """
-===(a::Set, b::Set) = @forall x iff(x∈a, x∈b)
+===(a::Set, b::Set) = @forall x x∈a <=> x∈b
 
 @builtin function ∈(_, ::Set) end
 @alias ∈ (in, isin, among, 属于, u2208)
@@ -24,6 +24,9 @@ broadcast(f::Lambda, s::Set) = set(x -> (@exists y∈s f(y)===x))
 markdown.zh = "`set(p, ext)` 是单参数功能的扩展，相当于 \$\{ext(x) | p(x)\}\$"
 """
 set(p::Lambda, ext::Set) = broadcast(ext, set(p))
+macro set(ext, separater, judge)
+	return $(set($judge, $ext))
+end
 enumerate(data) = set(x -> x∈data)
 enum(args...) = enumerate(args)
 
@@ -95,3 +98,6 @@ struct BroadSet
 end
 in(e, s::BroadSet) = in(e, s.field)
 ==(a::BroadSet, b::BroadSet) = a.field==b.field
+
+# struct RepresentativeSystem
+# end

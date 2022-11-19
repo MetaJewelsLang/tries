@@ -1,6 +1,3 @@
-"""
-plain.zh = "这里放了许多常见的抽象代数内容，但是不包含范畴论，因为类型系统及相关工具已经足够了。"
-"""
 module CommonAbstraction
 
 has_closure_2(s, f) = forallin(s, x -> forallin(s, y -> f(x, y)∈s))
@@ -37,6 +34,7 @@ is_monoid(s, f) = has_closure_2(s, f) && has_associativity(s, f) && has_unit_lef
 
 is_group(s, f) = has_closure_2(s, f) && has_associativity(s, f) && has_unit_left(s, f) && has_inverse_left(s, f)
 @alias is_group (群,)
+@buildtype Group(s, f) is_group
 
 """
 plain.zh = "同时满足结合律和交换律，一般被叫做“加法”，单位元可以叫零元"
@@ -56,11 +54,5 @@ is_infinite_group(s, f) = is_group(s, f) && is_infinite(s)
 @alias is_infinite_group (无限群,)
 
 is_sub_group(s, f, t) = is_group(s, f) && is_group(t, f) && subset(t, s)
-
-@environment begin
-    @global s,f is_group(s, f)
-    left_inv_right = @proof begin
-    end
-end
 
 end # CA

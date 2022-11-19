@@ -99,3 +99,7 @@ end
     # fieldof_lower
     @assert forallifthen(x -> isa(x, SetNaturalNumber), x -> isℕ(x.set))
 end =#
+
+@proof nextx_prevy_eq_prevx_nexty begin
+    ;
+end

@@ -13,8 +13,8 @@
 # @builtin :true
 # const false = not(true)
 
-iff(a::Bool, b::Bool) = and(a => b, b => a)
-@alias iff (ifandonlyif, 当且仅当)
+<=>(a::Bool, b::Bool) = and(a => b, b => a)
+@alias <=> (iff, ifandonlyif, 当且仅当)
 
 """
 plain.zh = "与化简"
